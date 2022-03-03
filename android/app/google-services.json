@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "482304792069",
+    "project_id": "vendor-app-40d8b",
+    "storage_bucket": "vendor-app-40d8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482304792069:android:e6846a24fe1084aca7ee6c",
+        "android_client_info": {
+          "package_name": "com.example.vendors"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482304792069-l7b7t490l34kt30ru4me6hp2evf3s0si.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNUfTz0K6u_H-_unu9Q55Z-2DuvV7d5sk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482304792069-l7b7t490l34kt30ru4me6hp2evf3s0si.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "482304792069-gjbtbc1o3710ijctsardkgeq4dec9gpr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firestoreTestr"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482304792069:android:8604b0b981081ab4a7ee6c",
+        "android_client_info": {
+          "package_name": "com.example.vendors_home"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482304792069-l7b7t490l34kt30ru4me6hp2evf3s0si.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNUfTz0K6u_H-_unu9Q55Z-2DuvV7d5sk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482304792069-l7b7t490l34kt30ru4me6hp2evf3s0si.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "482304792069-gjbtbc1o3710ijctsardkgeq4dec9gpr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firestoreTestr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
