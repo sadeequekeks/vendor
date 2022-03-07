@@ -19,15 +19,12 @@ class _RegisterState extends State<Register> {
   TextEditingController fname = TextEditingController();
   TextEditingController lname = TextEditingController();
   bool isLoading = false;
+  List<TextEditingController> controllers = [];
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    email.clear();
-    password.clear();
-    fname.clear();
-    lname.clear();
+  void initState() {
+    super.initState();
+    controllers.addAll([email, password, fname, lname]);
   }
 
   @override
@@ -90,21 +87,25 @@ class _RegisterState extends State<Register> {
                     : PrimaryButton(
                         title: 'Sign up',
                         onTap: (startLoading, stopLoading, btnState) async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await si.firebaseService
+                          startLoading();
+                          await si.authService
                               .register(
                             email: email.text,
                             password: password.text,
                             fName: fname.text,
                             lName: lname.text,
                           )
-                              .then((value) {
-                            print(value);
-                          });
-                          setState(() {
-                            isLoading = false;
+                              .then((id) {
+                            if (id!.isNotEmpty) {
+                              stopLoading();
+                              si.dialogService.showToaster(
+                                  '${email.text} has been created successfully');
+                              si.utilityService.clearFields(controllers);
+                            } else {
+                              stopLoading();
+                              si.dialogService.showToaster(
+                                  'An error occured while registering a user');
+                            }
                           });
                         },
                       ),

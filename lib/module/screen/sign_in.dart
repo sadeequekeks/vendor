@@ -3,7 +3,9 @@ import 'package:vendors/core/service_injector/service_injector.dart';
 import 'package:vendors/module/screen/home.dart';
 import 'package:vendors/module/screen/sign_up.dart';
 import 'package:vendors/module/screen/vendor_register.dart';
+import 'package:vendors/shared/model/user_model.dart';
 import 'package:vendors/shared/widget/button/bottom_nav.dart';
+import 'package:vendors/shared/widget/button/primary_button.dart';
 import 'package:vendors/shared/widget/form/email_text_field.dart';
 import 'package:vendors/shared/widget/form/pass_text_field.dart';
 import 'package:vendors/shared/widget/form/text_field.dart';
@@ -75,37 +77,39 @@ class _SignInState extends State<SignIn> {
                       icon: Icons.password,
                     ),
                     const SizedBox(height: 15.0),
-                    MaterialButton(
-                      onPressed: () async {
+                    PrimaryButton(
+                      title: 'Sign In',
+                      onTap: (startLoading, stopLoading, btnState) async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          setState(() {
-                            isLoading = true;
+                          startLoading();
+                          await si.authService
+                              .loginUser(
+                                  email: email.text, password: password.text)
+                              .then((user) {
+                            if (user.runtimeType == String) {
+                              stopLoading();
+                              si.dialogService.showToaster(user);
+                            } else {
+                              startLoading();
+                              si.routerService.nextScreen(
+                                context,
+                                BottomNav(user: user),
+                              );
+                            }
                           });
-                          String res = await si.firebaseService.loginUser(
-                              email: email.text, password: password.text);
                           // await si.routerService.nextScreen(context, const Home());
-                          if (res == "Success") {
-                            si.routerService.nextScreen(context, const Home());
-                          } else {
-                            si.dialogService.showToaster(res);
-                          }
-                          setState(() {
-                            isLoading = false;
-                          });
+                          // if (res == "Success") {
+                          //   si.routerService.nextScreen(context, const Home());
+                          // } else {
+                          //   si.dialogService.showToaster(res);
+
+                          //   setState(() {
+                          //     isLoading = false;
+                          //   });
+                          // }
                         }
                       },
-                      child: isLoading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.blue,
-                              ),
-                            )
-                          : const Text(
-                              'Sign in',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                      color: Colors.blue,
                     ),
                     const SizedBox(height: 30.0),
                     TextButton(

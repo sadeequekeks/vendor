@@ -22,4 +22,10 @@ class UtilityService {
     });
     return file;
   }
+
+  void clearFields(List<TextEditingController> controller) {
+    for (TextEditingController field in controller) {
+      field.clear();
+    }
+  }
 }

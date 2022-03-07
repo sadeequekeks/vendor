@@ -1,53 +1,30 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-
-  Future<Map<String, dynamic>> register(
-      {required String email,
-      required String password,
-      required String fName,
-      required String lName}) async {
-    Map<String, dynamic> user = {};
+  //add
+  Future<bool?> addDoc(
+      {required String collection,
+      required Map<String, dynamic> data,
+      String? id}) async {
+    bool? isDocAdded;
     try {
-      UserCredential cred = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      await _fireStore.collection('users').doc(cred.user!.uid).set({
-        "first_name": fName,
-        "last_name": lName,
-        "email": email,
-        "uid": cred.user!.uid,
-      }).then((value) {
-        user = {
-          'user': cred.user!,
-        };
+      await _fireStore.collection(collection).doc(id).set(data).then((value) {
+        isDocAdded = true;
       });
     } catch (e) {
-      user = {
-        'error': e,
-      };
+      isDocAdded = false;
     }
-    return user;
+    return isDocAdded;
   }
 
-  Future<String> loginUser({
-    required String email,
-    required String password,
-  }) async {
-    String res = "Some error occured";
-    try {
-      if (email.isNotEmpty || password.isNotEmpty) {
-        await _firebaseAuth.signInWithEmailAndPassword(
-            email: email, password: password);
-        res = "Success";
-      } else {
-        res = 'Please enter all fields';
-      }
-    } catch (e) {
-      res = e.toString();
-    }
-    return res;
+  //get one
+  Future<DocumentSnapshot<Map<String, dynamic>>?> getOneDoc(
+      {required String collection, required String id}) async {
+    DocumentSnapshot<Map<String, dynamic>>? doc;
+    await _fireStore.collection(collection).doc(id).get().then((value) {
+      doc = value;
+    });
+    return doc;
   }
 }

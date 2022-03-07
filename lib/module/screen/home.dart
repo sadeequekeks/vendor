@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vendors/shared/model/user_model.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final UserModel user;
+  const Home({Key? key, required this.user}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -16,6 +18,46 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const FlexBalanceDash(),
+            Container(
+              padding: const EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.user.fName}, ${widget.user.lName}',
+                        style: const TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.user.email,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  const CircleAvatar(
+                    radius: 25,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  )
+                ],
+              ),
+            ),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -69,12 +111,14 @@ class FoodBuddies extends StatelessWidget {
   final String name;
   final String image;
   final String address;
-  final VoidCallback onTap;
-  FoodBuddies(
-      {required this.name,
+  final void Function()? onTap;
+  const FoodBuddies(
+      {Key? key,
+      required this.name,
       required this.address,
       required this.image,
-      required this.onTap});
+      required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

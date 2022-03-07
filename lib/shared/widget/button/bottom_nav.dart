@@ -2,20 +2,22 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:vendors/module/screen/home.dart';
+import 'package:vendors/shared/model/user_model.dart';
 
 class BottomNav extends StatefulWidget {
-  const BottomNav({Key? key}) : super(key: key);
+  final UserModel user;
+  const BottomNav({Key? key, required this.user}) : super(key: key);
 
   @override
   _BottomNavState createState() => _BottomNavState();
 }
 
 class _BottomNavState extends State<BottomNav> {
-  List<Widget> homePages = [
-    const Center(child: Text('Me')),
-    const Center(child: Home()),
-    const Center(child: Text('Me')),
-  ];
+  // List<Widget> homePages = [
+  //   const Center(child: Text('Me')),
+  //   Center(child: Home(user: widget.user)),
+  //   const Center(child: Text('Me')),
+  // ];
   late PageController tabController;
   @override
   void initState() {
@@ -30,7 +32,11 @@ class _BottomNavState extends State<BottomNav> {
         child: PageView(
           controller: tabController,
           physics: const NeverScrollableScrollPhysics(),
-          children: homePages,
+          children: [
+            const Center(child: Text('Me')),
+            Center(child: Home(user: widget.user)),
+            const Center(child: Text('Me')),
+          ],
         ),
       ),
       bottomNavigationBar: ConvexAppBar(
