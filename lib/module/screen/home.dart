@@ -10,53 +10,57 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const FlexBalanceDash(),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: const [
-                  Text(
-                    'Your Food Buddies',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13.0,
-                    ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const FlexBalanceDash(),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Text(
+                        'Your Food Buddies',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 13.0,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 13.7,
+                      ),
+                      Icon(Icons.chevron_right)
+                    ],
                   ),
-                  SizedBox(
-                    width: 13.7,
+                  const SizedBox(
+                    height: 10.0,
                   ),
-                  Icon(Icons.chevron_right)
                 ],
               ),
-              const SizedBox(
-                height: 10.0,
+            ),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return FoodBuddies(
+                    name: 'Barhak Restaurant',
+                    address: 'Student Market, Atbu Yelwa.',
+                    image: 'assets/res1.jpg',
+                    onTap: () {},
+                  );
+                },
               ),
-            ],
-          ),
+            )
+          ],
         ),
-        Expanded(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2),
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return FoodBuddies(
-                name: 'Barhak Restaurant',
-                address: 'Student Market, Atbu Yelwa.',
-                image: 'assets/res1.jpg',
-                onTap: () {},
-              );
-            },
-          ),
-        )
-      ],
+      ),
     );
   }
 }

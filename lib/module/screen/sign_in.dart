@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendors/core/service_injector/service_injector.dart';
+import 'package:vendors/module/screen/home.dart';
 import 'package:vendors/module/screen/sign_up.dart';
 import 'package:vendors/module/screen/vendor_register.dart';
 import 'package:vendors/shared/widget/button/bottom_nav.dart';
@@ -15,7 +16,11 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,100 +29,118 @@ class _SignInState extends State<SignIn> {
           child: Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 15.0, vertical: 50.0),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Image(
-                    image: AssetImage('assets/chef.png'),
-                    height: 150.0,
-                  ),
-                  const SizedBox(height: 10.0),
-                  const Text(
-                    'Sign in',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
+            child: Form(
+              key: _formKey,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(
+                      image: AssetImage('assets/chef.png'),
+                      height: 150.0,
                     ),
-                  ),
-                  const SizedBox(height: 15.0),
-                  EmailTextField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Email is required';
-                      }
-                      return null;
-                    },
-                    hintText: 'johndoa@example.com',
-                    labelText: 'Email',
-                    icon: Icons.email,
-                  ),
-                  const SizedBox(height: 15.0),
-                  PassTextField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Password is required';
-                      }
-                      return null;
-                    },
-                    hintText: 'Enter Password',
-                    labelText: 'Password',
-                    icon: Icons.password,
-                  ),
-                  const SizedBox(height: 15.0),
-                  MaterialButton(
-                    onPressed: () async {
-                      si.routerService.nextScreen(
-                        context,
-                        const BottomNav(),
-                      );
-                    },
-                    child: isLoading == true
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
+                    const SizedBox(height: 10.0),
+                    const Text(
+                      'Sign in',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 15.0),
+                    EmailTextField(
+                      controller: email,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Email is required';
+                        }
+                        return null;
+                      },
+                      hintText: 'johndoa@example.com',
+                      labelText: 'Email',
+                      icon: Icons.email,
+                    ),
+                    const SizedBox(height: 15.0),
+                    PassTextField(
+                      controller: password,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Password is required';
+                        }
+                        return null;
+                      },
+                      hintText: 'Enter Password',
+                      labelText: 'Password',
+                      icon: Icons.password,
+                    ),
+                    const SizedBox(height: 15.0),
+                    MaterialButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          setState(() {
+                            isLoading = true;
+                          });
+                          String res = await si.firebaseService.loginUser(
+                              email: email.text, password: password.text);
+                          // await si.routerService.nextScreen(context, const Home());
+                          if (res == "Success") {
+                            si.routerService.nextScreen(context, const Home());
+                          } else {
+                            si.dialogService.showToaster(res);
+                          }
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      },
+                      child: isLoading == true
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.blue,
+                              ),
+                            )
+                          : const Text(
+                              'Sign in',
+                              style: TextStyle(color: Colors.white),
                             ),
-                          )
-                        : const Text(
-                            'Sign in',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(height: 30.0),
-                  TextButton(
-                    onPressed: () {
-                      si.routerService.nextScreen(
-                        context,
-                        Register(),
-                      );
-                    },
-                    child: const Text(
-                      'Create an account here - Sign up',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15.0,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(height: 30.0),
+                    TextButton(
+                      onPressed: () {
+                        si.routerService.nextScreen(
+                          context,
+                          const Register(),
+                        );
+                      },
+                      child: const Text(
+                        'Create an account here - Sign up',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextButton(
-                    onPressed: () {
-                      si.routerService.nextScreen(
-                        context,
-                        VendorRegister(),
-                      );
-                    },
-                    child: const Text(
-                      'Register as a Vendor',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15.0,
+                    const SizedBox(height: 8.0),
+                    TextButton(
+                      onPressed: () {
+                        si.routerService.nextScreen(
+                          context,
+                          VendorRegister(),
+                        );
+                      },
+                      child: const Text(
+                        'Register as a Vendor',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

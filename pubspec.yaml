@@ -51,7 +51,9 @@ dev_dependencies:
   convex_bottom_bar: ^3.0.0
   #firebase
   firebase_core: ^1.10.3
-  firebase_auth: ^3.3.5
+  firebase_auth: ^3.3.0
+  cloud_firestore: ^3.1.6
+  fluttertoast: ^8.0.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
