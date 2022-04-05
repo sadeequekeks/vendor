@@ -4,11 +4,14 @@ import 'package:vendors/shared/model/user_model.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  Future<String?> register(
-      {required String email,
-      required String password,
-      required String fName,
-      required String lName}) async {
+  Future<String?> register({
+    required String email,
+    required String password,
+    required String fName,
+    required String lName,
+    required String location,
+    required String phone,
+  }) async {
     String? id;
     try {
       await _firebaseAuth
@@ -21,7 +24,9 @@ class AuthService {
             "first_name": fName,
             "last_name": lName,
             "email": email,
-            "user_type": 'user',
+            "location": location,
+            "phone": phone,
+            "user_type": 'admin',
           },
           id: userCredentials.user!.uid,
         )
@@ -55,6 +60,8 @@ class AuthService {
             fName: value!.data()!['first_name'],
             lName: value.data()!['last_name'],
             email: value.data()!['email'],
+            phone: value.data()!['phone'],
+            location: value.data()!['location'],
             userType: value.data()!['user_type'],
           );
         });
@@ -65,3 +72,5 @@ class AuthService {
     return user;
   }
 }
+// .split('] ')[1];
+//     }

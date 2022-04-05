@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:vendors/shared/model/user_model.dart';
+import 'package:vendors/core/helper/format_money.dart';
+import 'package:vendors/core/service_injector/service_injector.dart';
+import 'package:vendors/module/screen/food_single_screen.dart';
+import 'package:vendors/shared/model/food_model.dart';
+import 'package:vendors/shared/model/item_model.dart';
+import 'package:vendors/shared/widget/card/categories_card.dart';
+import 'package:vendors/shared/widget/card/food_card.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+enum Food {
+  burger,
+  pizza,
+  cake,
+}
 
 class Home extends StatefulWidget {
-  final UserModel user;
-  const Home({Key? key, required this.user}) : super(key: key);
+  // final UserModel user;
+  const Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final Helper _helper = Helper();
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSalary = Food.burger;
+  }
+
+  late Food selectedSalary;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,46 +40,6 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const FlexBalanceDash(),
-            Container(
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.all(15),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${widget.user.fName}, ${widget.user.lName}',
-                        style: const TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.user.email,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    radius: 25,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  )
-                ],
-              ),
-            ),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -70,7 +52,8 @@ class _HomeState extends State<Home> {
                         'Your Food Buddies',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 13.0,
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(
@@ -80,112 +63,123 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                   const SizedBox(
-                    height: 10.0,
+                    height: 15.0,
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     CategoriesCard(
+                  //       name: '🍔 Burger',
+                  //       color: selectedSalary == Food.burger
+                  //           ? Colors.blue
+                  //           : Colors.white,
+                  //       textColor: selectedSalary == Food.burger
+                  //           ? Colors.white
+                  //           : Colors.black,
+                  //       onTap: () {
+                  //         setState(() {
+                  //           selectedSalary = Food.burger;
+                  //         });
+                  //       },
+                  //     ),
+                  //     CategoriesCard(
+                  //       name: '🍕 Pizza',
+                  //       color: selectedSalary == Food.pizza
+                  //           ? Colors.blue
+                  //           : Colors.white,
+                  //       textColor: selectedSalary == Food.pizza
+                  //           ? Colors.white
+                  //           : Colors.black,
+                  //       onTap: () {
+                  //         setState(() {
+                  //           selectedSalary = Food.pizza;
+                  //         });
+                  //       },
+                  //     ),
+                  //     CategoriesCard(
+                  //       name: '🎂 Cake',
+                  //       color: selectedSalary == Food.cake
+                  //           ? Colors.blue
+                  //           : Colors.white,
+                  //       textColor: selectedSalary == Food.cake
+                  //           ? Colors.white
+                  //           : Colors.black,
+                  //       onTap: () {
+                  //         setState(() {
+                  //           selectedSalary = Food.cake;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 15.0),
+                  const Text(
+                    'Popular',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
                 ],
               ),
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return FoodBuddies(
-                    name: 'Barhak Restaurant',
-                    address: 'Student Market, Atbu Yelwa.',
-                    image: 'assets/res1.jpg',
-                    onTap: () {},
+            FutureBuilder<List<ItemModel>>(
+              future: si.vendorService.getAllFood(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: SpinKitCircle(
+                      color: Colors.blue,
+                      size: 50.0,
+                    ),
                   );
-                },
-              ),
-            )
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                } else if (!snapshot.hasData) {
+                  return const Center(child: Text('NO DATA!'));
+                } else if (snapshot.hasData) {
+                  final data = snapshot.data!;
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // String id = data[index].id;
+                        FoodModel food = FoodModel(
+                          name: data[index].food.name,
+                          category: data[index].food.category,
+                          description: data[index].food.description,
+                          price: data[index].food.price,
+                        );
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: FoodCard(
+                            foodTitle: food.name,
+                            foodContent: food.category,
+                            rating: '2.5',
+                            time: _helper.formattNumber(
+                              int.parse(food.price),
+                            ),
+                            onTap: () {
+                              si.routerService.nextScreen(
+                                  context,
+                                  RecipeSinglePage(
+                                    item: data[index],
+                                  ));
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class FoodBuddies extends StatelessWidget {
-  final String name;
-  final String image;
-  final String address;
-  final void Function()? onTap;
-  const FoodBuddies(
-      {Key? key,
-      required this.name,
-      required this.address,
-      required this.image,
-      required this.onTap})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 100,
-          height: 170.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 5,
-                offset: Offset(0, 0.1),
-                color: Colors.blue,
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  height: 100.0,
-                  width: 145.6,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: AssetImage(image),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 2.5,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: Colors.blue[500],
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    Text(
-                      address,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 10.0,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
         ),
       ),
     );
@@ -231,7 +225,7 @@ class FlexBalanceDash extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Vendors Home',
+                        'Let\'s eat Quality food🙂',
                         style: TextStyle(
                           color: Colors.blue[600],
                           fontSize: 30.0,

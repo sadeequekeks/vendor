@@ -27,4 +27,33 @@ class FirebaseService {
     });
     return doc;
   }
+
+  //get All
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?> getDocStream(
+      String collection) async {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>>? docs;
+    try {
+      await _fireStore.collection(collection).get().then((value) {
+        docs = value.docs;
+      });
+    } catch (e) {
+      throw 'Error occured $e';
+    }
+    return docs;
+  }
+
+  //delete
+  Future<bool?> deleteDoc(
+      {required String collection, required String id}) async {
+    bool? isDeleted;
+    try {
+      await _fireStore.collection(collection).doc(id).delete().then((value) {
+        isDeleted = true;
+      });
+    } catch (e) {
+      isDeleted = false;
+      throw 'Error occured $e';
+    }
+    return isDeleted;
+  }
 }

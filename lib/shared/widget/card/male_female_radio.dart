@@ -20,7 +20,6 @@ class _MaleFemalePickerState extends State<MaleFemalePicker> {
       female = false;
       selectedGender = Gender.male;
     });
-    print(selectedGender);
   }
 
   void femaleGenderSelector() {
@@ -29,12 +28,10 @@ class _MaleFemalePickerState extends State<MaleFemalePicker> {
       female = true;
       selectedGender = Gender.female;
     });
-    print(selectedGender);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     selectedGender = Gender.male;
   }
@@ -71,7 +68,7 @@ class GenderButton extends StatelessWidget {
   final String genderName;
   final IconData genderIcon;
   final bool selected;
-  const GenderButton(
+  GenderButton(
       {required this.gender,
       required this.onTap,
       required this.genderName,

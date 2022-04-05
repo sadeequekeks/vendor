@@ -18,6 +18,9 @@ class _RegisterState extends State<Register> {
   TextEditingController password = TextEditingController();
   TextEditingController fname = TextEditingController();
   TextEditingController lname = TextEditingController();
+  TextEditingController locationC = TextEditingController();
+  TextEditingController phone = TextEditingController();
+
   bool isLoading = false;
   List<TextEditingController> controllers = [];
 
@@ -76,7 +79,20 @@ class _RegisterState extends State<Register> {
                   icon: Icons.password,
                 ),
                 const SizedBox(height: 15.0),
-                const MaleFemalePicker(),
+                InputTextField(
+                  controller: locationC,
+                  hintText: 'Kaduna, Nigeria.',
+                  labelText: 'Location',
+                  icon: Icons.location_city,
+                ),
+                const SizedBox(height: 15.0),
+                InputTextField(
+                  controller: phone,
+                  hintText: '+2348045567600',
+                  labelText: 'Phone',
+                  icon: Icons.phone,
+                ),
+                const SizedBox(height: 15.0),
                 const SizedBox(height: 20.0),
                 isLoading == true
                     ? const Center(
@@ -94,6 +110,8 @@ class _RegisterState extends State<Register> {
                             password: password.text,
                             fName: fname.text,
                             lName: lname.text,
+                            location: locationC.text,
+                            phone: phone.text,
                           )
                               .then((id) {
                             if (id!.isNotEmpty) {

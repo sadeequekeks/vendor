@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vendors/core/service_injector/service_injector.dart';
-import 'package:vendors/module/screen/home.dart';
 import 'package:vendors/module/screen/sign_up.dart';
-import 'package:vendors/module/screen/vendor_register.dart';
 import 'package:vendors/shared/model/user_model.dart';
 import 'package:vendors/shared/widget/button/bottom_nav.dart';
 import 'package:vendors/shared/widget/button/primary_button.dart';
 import 'package:vendors/shared/widget/form/email_text_field.dart';
 import 'package:vendors/shared/widget/form/pass_text_field.dart';
-import 'package:vendors/shared/widget/form/text_field.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -92,22 +89,14 @@ class _SignInState extends State<SignIn> {
                               si.dialogService.showToaster(user);
                             } else {
                               startLoading();
-                              si.routerService.nextScreen(
+                              si.routerService.popReplaceScreen(
                                 context,
-                                BottomNav(user: user),
+                                BottomNav(
+                                  user: user,
+                                ),
                               );
                             }
                           });
-                          // await si.routerService.nextScreen(context, const Home());
-                          // if (res == "Success") {
-                          //   si.routerService.nextScreen(context, const Home());
-                          // } else {
-                          //   si.dialogService.showToaster(res);
-
-                          //   setState(() {
-                          //     isLoading = false;
-                          //   });
-                          // }
                         }
                       },
                     ),
@@ -121,22 +110,6 @@ class _SignInState extends State<SignIn> {
                       },
                       child: const Text(
                         'Create an account here - Sign up',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    TextButton(
-                      onPressed: () {
-                        si.routerService.nextScreen(
-                          context,
-                          VendorRegister(),
-                        );
-                      },
-                      child: const Text(
-                        'Register as a Vendor',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,

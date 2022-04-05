@@ -12,7 +12,7 @@ import 'package:vendors/shared/widget/form/text_field.dart';
 import 'package:image_picker/image_picker.dart';
 
 class VendorRegister extends StatefulWidget {
-  VendorRegister({Key? key}) : super(key: key);
+  const VendorRegister({Key? key}) : super(key: key);
 
   @override
   State<VendorRegister> createState() => _VendorRegisterState();

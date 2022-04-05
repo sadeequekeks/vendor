@@ -6,6 +6,7 @@ class Serviceinjector {
   FirebaseService firebaseService = FirebaseService();
   AuthService authService = AuthService();
   DialogService dialogService = DialogService();
+  VendorService vendorService = VendorService();
 }
 
 Serviceinjector si = Serviceinjector();
