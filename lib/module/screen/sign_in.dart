@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendors/core/service_injector/service_injector.dart';
 import 'package:vendors/module/screen/sign_up.dart';
-import 'package:vendors/shared/model/user_model.dart';
 import 'package:vendors/shared/widget/button/bottom_nav.dart';
 import 'package:vendors/shared/widget/button/primary_button.dart';
 import 'package:vendors/shared/widget/form/email_text_field.dart';

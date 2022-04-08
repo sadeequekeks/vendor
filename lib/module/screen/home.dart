@@ -4,7 +4,7 @@ import 'package:vendors/core/service_injector/service_injector.dart';
 import 'package:vendors/module/screen/food_single_screen.dart';
 import 'package:vendors/shared/model/food_model.dart';
 import 'package:vendors/shared/model/item_model.dart';
-import 'package:vendors/shared/widget/card/categories_card.dart';
+// import 'package:vendors/shared/widget/card/categories_card.dart';
 import 'package:vendors/shared/widget/card/food_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

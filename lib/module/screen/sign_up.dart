@@ -27,7 +27,7 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     super.initState();
-    controllers.addAll([email, password, fname, lname]);
+    controllers.addAll([email, password, fname, lname, locationC, phone]);
   }
 
   @override

@@ -4,8 +4,11 @@ import 'package:vendors/shared/model/food_model.dart';
 import 'package:vendors/shared/model/item_model.dart';
 import 'package:vendors/shared/model/resturant_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VendorService {
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
   Future<List<ItemModel>> getAllFood() async {
     List<ItemModel> items = [];
     try {
@@ -14,6 +17,7 @@ class VendorService {
           Map<String, dynamic> item = value.data();
           dynamic foodValue = item['food'];
           dynamic resturantValue = item['resturant'];
+          String foodID = value.id;
           FoodModel food = FoodModel(
             name: foodValue['name'],
             category: foodValue['category'],
@@ -26,7 +30,8 @@ class VendorService {
             description: resturantValue['description'],
             rating: resturantValue['rating'],
           );
-          items.add(ItemModel(food: food, resturant: resturant));
+          items
+              .add(ItemModel(food: food, resturant: resturant, foodID: foodID));
         }
       });
     } catch (e) {
@@ -101,5 +106,36 @@ class VendorService {
       }
     });
     return sum;
+  }
+
+  //add food
+
+  Future<String?> addFood({
+    required FoodModel food,
+    required ResturantModel resturant,
+    String? foodID,
+  }) async {
+    final foodId = _fireStore.collection('food').doc();
+    String? message;
+    try {
+      await si.firebaseService
+          .addDoc(
+        collection: 'food',
+        data: ItemModel(
+          food: food,
+          resturant: resturant,
+          foodID: foodId.id,
+        ).toMap(),
+        id: foodId.id,
+      )
+          .then((value) {
+        if (value == true) {
+          message = 'Successful';
+        }
+      });
+    } catch (e) {
+      message = 'Error occured $e';
+    }
+    return message;
   }
 }

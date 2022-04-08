@@ -9,4 +9,11 @@ class FoodModel {
       required this.category,
       required this.description,
       required this.price});
+
+  Map<String, dynamic> toMap() => {
+        "name": name,
+        "description": description,
+        "price": price,
+        "category": category
+      };
 }

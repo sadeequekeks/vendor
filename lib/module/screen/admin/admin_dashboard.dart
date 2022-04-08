@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendors/core/service_injector/service_injector.dart';
+import 'package:vendors/module/screen/admin/add_food_screen.dart';
 import 'package:vendors/shared/model/food_model.dart';
 import 'package:vendors/shared/model/item_model.dart';
 import 'package:vendors/shared/widget/card/admin_food.dart';
@@ -18,6 +19,20 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          si.routerService.nextScreen(
+            context,
+            const AddFoodScreen(),
+          );
+        },
+        label: Row(
+          children: const [
+            Icon(Icons.add),
+            Text('Add Food'),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
@@ -75,11 +90,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     return const Center(child: Text('NO DATA!'));
                   } else if (snapshot.hasData) {
                     final data = snapshot.data!;
+
                     return Expanded(
                       child: ListView.builder(
                         itemCount: data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          // String id = data[index].id;
+                          String id = data[index].foodID;
                           FoodModel food = FoodModel(
                             name: data[index].food.name,
                             category: data[index].food.category,
@@ -91,7 +107,16 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             child: AdminFoodCard(
                               foodTitle: food.name,
                               foodContent: food.category,
-                              onPressed: () {},
+                              onPressed: () async {
+                                await si.firebaseService
+                                    .deleteDoc(collection: 'food', id: id)
+                                    .then((value) {
+                                  if (value == true) {
+                                    si.dialogService
+                                        .showToaster('Food is Deleted');
+                                  }
+                                });
+                              },
                             ),
                           );
                         },
