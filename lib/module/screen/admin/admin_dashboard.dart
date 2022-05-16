@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vendors/core/service_injector/service_injector.dart';
 import 'package:vendors/module/screen/admin/add_food_screen.dart';
+import 'package:vendors/module/screen/admin/edit_food_screen.dart';
 import 'package:vendors/shared/model/food_model.dart';
 import 'package:vendors/shared/model/item_model.dart';
+import 'package:vendors/shared/model/resturant_model.dart';
 import 'package:vendors/shared/widget/card/admin_food.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -90,7 +92,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     return const Center(child: Text('NO DATA!'));
                   } else if (snapshot.hasData) {
                     final data = snapshot.data!;
-
                     return Expanded(
                       child: ListView.builder(
                         itemCount: data.length,
@@ -102,11 +103,18 @@ class _AdminDashboardState extends State<AdminDashboard> {
                             description: data[index].food.description,
                             price: data[index].food.price,
                           );
+                          ResturantModel res = ResturantModel(
+                            name: data[index].resturant.name,
+                            address: data[index].resturant.address,
+                            description: data[index].resturant.description,
+                            rating: data[index].resturant.rating,
+                          );
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: AdminFoodCard(
                               foodTitle: food.name,
-                              foodContent: food.category,
+                              foodContent: res.name,
+                              //Deleting foods
                               onPressed: () async {
                                 await si.firebaseService
                                     .deleteDoc(collection: 'food', id: id)
@@ -116,6 +124,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                         .showToaster('Food is Deleted');
                                   }
                                 });
+                              },
+                              //Editing Food
+                              onTap: () {
+                                si.routerService.nextScreen(
+                                  context,
+                                  EditFoodScreen(
+                                    id: id,
+                                    res: res,
+                                    food: food,
+                                  ),
+                                );
                               },
                             ),
                           );

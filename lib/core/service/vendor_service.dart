@@ -30,8 +30,13 @@ class VendorService {
             description: resturantValue['description'],
             rating: resturantValue['rating'],
           );
-          items
-              .add(ItemModel(food: food, resturant: resturant, foodID: foodID));
+          items.add(
+            ItemModel(
+              food: food,
+              resturant: resturant,
+              foodID: foodID,
+            ),
+          );
         }
       });
     } catch (e) {
@@ -138,4 +143,7 @@ class VendorService {
     }
     return message;
   }
+
+  //update food
+
 }

@@ -9,10 +9,12 @@ class AdminFoodCard extends StatelessWidget {
     required this.foodTitle,
     required this.foodContent,
     required this.onPressed,
+    required this.onTap,
   }) : super(key: key);
   final String foodTitle, foodContent;
 
   final void Function()? onPressed;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,7 +55,12 @@ class AdminFoodCard extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: ListTile(
                 title: Text(foodTitle),
-                subtitle: Text(foodContent),
+                subtitle: Row(
+                  children: [
+                    Text('From: $foodContent'),
+                    TextButton(onPressed: onTap, child: const Text('Edit')),
+                  ],
+                ),
                 trailing: IconButton(
                   icon: const Icon(
                     Icons.delete,

@@ -124,8 +124,8 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            FutureBuilder<List<ItemModel>>(
-              future: si.vendorService.getAllFood(),
+            StreamBuilder<dynamic>(
+              stream: si.firebaseService.getAllDocStream('food'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -141,35 +141,35 @@ class _HomeState extends State<Home> {
                 } else if (!snapshot.hasData) {
                   return const Center(child: Text('NO DATA!'));
                 } else if (snapshot.hasData) {
-                  final data = snapshot.data!;
+                  final data = snapshot.data!.docs;
                   return Expanded(
                     child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (BuildContext context, int index) {
                         // String id = data[index].id;
-                        FoodModel food = FoodModel(
-                          name: data[index].food.name,
-                          category: data[index].food.category,
-                          description: data[index].food.description,
-                          price: data[index].food.price,
-                        );
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: FoodCard(
-                            foodTitle: food.name,
-                            foodContent: food.category,
-                            rating: '2.5',
-                            time: _helper.formattNumber(
-                              int.parse(food.price),
-                            ),
-                            onTap: () {
-                              si.routerService.nextScreen(
-                                  context,
-                                  RecipeSinglePage(
-                                    item: data[index],
-                                  ));
-                            },
-                          ),
+                        // FoodModel food = FoodModel(
+                        //   name: data[index].food.name,
+                        //   category: data[index].food.category,
+                        //   description: data[index].food.description,
+                        //   price: data[index].food.price,
+                        // );
+                        return const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          // child: FoodCard(
+                          //   foodTitle: food.name,
+                          //   foodContent: food.category,
+                          //   rating: '2.5',
+                          //   time: _helper.formattNumber(
+                          //     int.parse(food.price),
+                          //   ),
+                          //   onTap: () {
+                          //     si.routerService.nextScreen(
+                          //         context,
+                          //         RecipeSinglePage(
+                          //           item: data[index],
+                          //         ));
+                          //   },
+                          // ),
                         );
                       },
                     ),

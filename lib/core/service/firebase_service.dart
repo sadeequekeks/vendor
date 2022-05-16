@@ -56,4 +56,36 @@ class FirebaseService {
     }
     return isDeleted;
   }
+
+  //update
+  Future<bool?> updateDoc(
+      {required String collection,
+      required String id,
+      required Map<String, dynamic> data}) async {
+    bool? isUpdated;
+    try {
+      await _fireStore
+          .collection(collection)
+          .doc(id)
+          .update(data)
+          .then((value) {
+        isUpdated = true;
+      });
+    } catch (e) {
+      isUpdated = false;
+      throw 'Error occured $e';
+    }
+    return isUpdated;
+  }
+
+  // getting doc stream
+  Stream<QuerySnapshot> getAllDocStream(String collection) {
+    Stream<QuerySnapshot>? snapshot;
+    try {
+      snapshot = _fireStore.collection(collection).orderBy('name').snapshots();
+    } catch (e) {
+      throw 'Error occured $e';
+    }
+    return snapshot;
+  }
 }
